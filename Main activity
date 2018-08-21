@@ -1,0 +1,169 @@
+public class MainActivity extends AppCompatActivity {
+
+    @BindView(R.id.videoContainer)
+    LinearLayout videoContainer;
+    //@BindView(R.id.blurView)
+    //FrameLayout blurView;
+    @BindView(R.id.beneath)
+    RelativeLayout beneath;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.hide();
+
+        //set up full screen
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
+        showLayout();
+        final VideoView myVideoView = findViewById(R.id.vidview);
+        MediaController mediaController = new MediaController(this);
+        mediaController.setAnchorView(myVideoView);
+        try {//try to fetch vid from sdcard
+            //String SrcPath = "/sdcard/week17boy.avi";//put your video in sdcard
+            String vidpath = "android.resource://" + getPackageName() + "/" + R.raw.start;
+            myVideoView.setVideoURI(Uri.parse(vidpath));
+            //myVideoView.setVideoPath(SrcPath);
+            myVideoView.setMediaController(null);
+            myVideoView.requestFocus();
+            myVideoView.setZOrderOnTop(true);
+            myVideoView.start();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
+
+
+        final VideoView myVideoView_second = findViewById(R.id.videoview);
+        MediaController mymediaController = new MediaController(this);
+        mediaController.setAnchorView(myVideoView_second);
+        try {//try to fetch vid from sdcard
+            //String SrcPath = "/sdcard/week17boy.avi";//put your video in sdcard
+            String vidpath = "android.resource://" + getPackageName() + "/" + R.raw.aref;
+            myVideoView_second.setVideoURI(Uri.parse(vidpath));
+            //myVideoView.setVideoPath(SrcPath);
+            myVideoView_second.setMediaController(null);
+            myVideoView_second.requestFocus();
+            myVideoView_second.setZOrderOnTop(true);
+            myVideoView_second.start();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showLayout() {
+        final PropertyValuesHolder scaleXHolder
+                = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f);
+        final PropertyValuesHolder scaleYHolder
+                = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f);
+        final ObjectAnimator animBlur
+                = ObjectAnimator.ofPropertyValuesHolder(videoContainer, scaleXHolder);
+        animBlur.setDuration(500);
+        animBlur.start();
+        animBlur.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                ObjectAnimator animBluro
+                        = ObjectAnimator.ofPropertyValuesHolder(videoContainer, scaleYHolder);
+                animBluro.setDuration(800);
+                animBluro.start();
+                animBluro.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        //PropertyValuesHolder scaleXholder
+                        // = PropertyValuesHolder.ofFloat(View.SCALE_X, 0f);
+                        PropertyValuesHolder scaleYholder
+                                = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f);
+                        final ObjectAnimator animBluri
+                                = ObjectAnimator.ofPropertyValuesHolder(videoContainer, scaleYholder);
+                        animBluri.setDuration(800);
+                        new CountDownTimer(4000, 2000) {
+
+                            public void onTick(long millisUntilFinished) {
+
+                            }
+
+                            public void onFinish() {
+                                animBluri.start();
+                                animBluri.addListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+
+                                        final TypewriterView typewriterView = findViewById(R.id.typewriter);
+                                        Typeface tr = Typeface.createFromAsset(getAssets(), "font/grandhotel.ttf");
+                                        typewriterView.setTypeface(tr);
+                                        typewriterView.setText("");
+                                        typewriterView.pause(100)
+                                                .type("Welcome").pause(1000)
+                                                .delete("Welcome").pause(300)
+                                                //.type("Sorry for some bugs").pause(300)
+                                                //.delete("Sorry for some bugs").pause(300)
+                                                .type("Still in Beta version").pause(500)
+                                                .delete("Still in Beta version").pause(200)
+                                                .type("have some Bugs").pause(500)
+                                                .delete("have some Bugs").pause(200)
+                                                .type("Hope you like it, cheers!").pause(100)
+
+                                                .run(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        // Finalize the text if user fiddled with it during animation.
+                                                        typewriterView.setText("Hope you like it, cheers!");
+                                                        typewriterView.setEnabled(false);
+                                                        new CountDownTimer(1000, 500) {
+
+                                                            public void onTick(long millisUntilFinished) {
+
+                                                            }
+
+                                                            public void onFinish() {
+                                                                //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                                                //   BitmapDrawable background = new BitmapDrawable(blurBitmap(getBitmapFromView(beneath)));
+                                                                //   blurView.setBackground(background);
+                                                                //}
+                                                                final Intent intent = new Intent(MainActivity.this, H_test.class);
+                                                                startActivity(intent);
+                                                                new CountDownTimer(1000, 1000) {
+
+                                                                    public void onTick(long millisUntilFinished) {
+
+                                                                    }
+
+                                                                    public void onFinish() {
+
+                                                                        finish();
+                                                                    }
+
+                                                                }.start();
+
+                                                            }
+
+                                                        }.start();
+                                                    }
+                                                });
+
+
+                                        super.onAnimationEnd(animation);
+                                    }
+                                });
+                            }
+
+                        }.start();
+
+                        //if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        //   BitmapDrawable background = new BitmapDrawable(blurBitmap(getBitmapFromView(beneath)));
+                        //   blurView.setBackground(background);
+                        //}
+
+                        super.onAnimationEnd(animation);
+                    }
+                });
+            }
+        });
+    }
+}
