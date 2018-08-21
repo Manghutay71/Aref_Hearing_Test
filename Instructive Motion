@@ -1,0 +1,71 @@
+public class About extends AppCompatActivity {
+
+    ScrollView mscrollView;
+    com.bluejamesbond.text.DocumentView text_how;
+    TextView text_title;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_about);
+        text_how = findViewById(R.id.text_about);
+        text_title = findViewById(R.id.text_about_title);
+        Typeface Titlle = Typeface.createFromAsset(getAssets(), "font/novecento.otf");
+        Typeface Titlle_two = Typeface.createFromAsset(getAssets(), "font/meriendaone.ttf");
+        text_how.setText("Aref Hearing Test is designed and programmed by Aref Gholizadeh Manghutay. The current version, version 1.0.3, is released on my GitHub page on August 21, 2018. This application is an example of using SQLite, Fragments, Animations, Navigation Drawer, View Pagers, Recycler View and FCM libraries in android design. The app supports different screen sizes from small screen mobile phones to tablets with large screens. You can use this app in your desired orientation but the app will not change orientation during runtime, so to change the screen orientation of this app please exit the app and enter again whit desired orientation. Special thanks to Karolina Szczur, purple11, Mark Cataldo, Ramiro Mendes for their beautiful photos on Unsplash.com, Feel free to contact me :\n" +
+                "agmmanghutay@gmail.com\n");
+        text_title.setTypeface(Titlle_two);
+        mscrollView = findViewById(R.id.scrollView_one);
+        onEnterAnimationComplete();
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+        switch (getResources().getConfiguration().orientation){
+            case Configuration.ORIENTATION_PORTRAIT:
+                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.FROYO){
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                } else {
+                    int rotation = getWindowManager().getDefaultDisplay().getRotation();
+                    if(rotation == android.view.Surface.ROTATION_90|| rotation == android.view.Surface.ROTATION_180){
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+                    } else {
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    }
+                }
+                break;
+
+            case Configuration.ORIENTATION_LANDSCAPE:
+                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.FROYO){
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                } else {
+                    int rotation = getWindowManager().getDefaultDisplay().getRotation();
+                    if(rotation == android.view.Surface.ROTATION_0 || rotation == android.view.Surface.ROTATION_90){
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    } else {
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                    }
+                }
+                break;
+        }
+
+    }
+    @Override
+    public void onEnterAnimationComplete(){
+        super.onEnterAnimationComplete();
+        final int startScrollPos =
+                getResources().getDimensionPixelSize(
+                        R.dimen.init_scroll_up_distance);
+        Animator animator = ObjectAnimator.ofInt(
+                mscrollView,
+                "scrollY",
+                startScrollPos)
+                .setDuration(8000);
+        animator.start();
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //Intent intent = new Intent(About.this, H_test.class);
+        //startActivity(intent);
+        this.finish();
+    }
+}
+
+
